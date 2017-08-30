@@ -47,7 +47,7 @@ function better_formats_filter_process_format(array &$element, FormStateInterfac
 
   $form_object = $form_state->getFormObject();
 
-  $user_input = 'full_html';
+  $user_input = 'full_html'; // This is the user selected value if any.
 
   if ($form_object instanceof Drupal\Core\Entity\ContentEntityForm) {
     $entity = $form_state->getFormObject()->getEntity();
@@ -62,6 +62,7 @@ function better_formats_filter_process_format(array &$element, FormStateInterfac
       if (Drupal::config('better_formats.settings')->get('per_field_core')) {
         $field_defaults = $field_definition->getDefaultValue($entity);
         $default_value = array_shift($field_defaults);
+        // Overrides the default value with user selected value if selected any.
         $value = empty($user_input) ? $default_value['format'] : $user_input; 
         better_formats_set_default_format($element, $value);
       }
