@@ -1,0 +1,24 @@
+diff --git a/better_formats.module b/better_formats.module
+index 5680144..734b23d 100644
+--- a/better_formats.module
++++ b/better_formats.module
+@@ -53,13 +53,18 @@ function better_formats_filter_process_format(array &$element, FormStateInterfac
+     $field_name = reset($element['#parents']);
+     $field_definition = $entity->getFieldDefinition($field_name);
+ 
++    // This is the user selected value if any.
++    $user_input = $form_state->getCompleteForm()[$field_name]['widget'][0]['#format']; 
++
+     if ($field_definition instanceof ThirdPartySettingsInterface) {
+       $bf = $field_definition->getThirdPartySettings('better_formats');
+ 
+       if (Drupal::config('better_formats.settings')->get('per_field_core')) {
+         $field_defaults = $field_definition->getDefaultValue($entity);
+         $default_value = array_shift($field_defaults);
+-        better_formats_set_default_format($element, $default_value['format']);
++        // Overrides the default value with user selected value if selected any.
++        $value = empty($user_input) ? $default_value['format'] : $user_input; 
++        better_formats_set_default_format($element, $value);
+       }
+     }
+   }
