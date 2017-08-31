@@ -47,14 +47,15 @@ function better_formats_filter_process_format(array &$element, FormStateInterfac
 
   $form_object = $form_state->getFormObject();
 
-  $user_input = 'full_html'; // This is the user selected value if any.
-
   if ($form_object instanceof Drupal\Core\Entity\ContentEntityForm) {
     $entity = $form_state->getFormObject()->getEntity();
     
     $entity_type = $entity->getEntityTypeId();
     $field_name = reset($element['#parents']);
     $field_definition = $entity->getFieldDefinition($field_name);
+
+    // This is the user selected value if any.
+    $user_input = $form_state->getCompleteForm()[$field_name]['widget'][0]['#format']; 
 
     if ($field_definition instanceof ThirdPartySettingsInterface) {
       $bf = $field_definition->getThirdPartySettings('better_formats');
